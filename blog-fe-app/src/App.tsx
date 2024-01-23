@@ -4,15 +4,19 @@ import BlogForm from "./components/BlogForm";
 import BlogList from "./components/BlogList";
 import BlogDetail from "./components/BlogDetail";
 import axios from "axios";
+import EditBlog from "./components/EditBlog";
 
 const App: React.FC = () => {
   const handlePublish = (title: string, content: string) => {
-    // Make API call to publish blog (replace with your actual API endpoint)
-    axios
-      .post("http://localhost:5000/blogs", { title, content })
-      .then((response) => {
-        console.log("Blog published:", response.data);
-      });
+    try {
+      axios
+        .post("http://localhost:5000/blogs", { title, content })
+        .then((response) => {
+          console.log("Blog published:", response.data);
+        });
+    } catch (error: any) {
+      console.log("Error:", error.message);
+    }
   };
 
   return (
@@ -21,6 +25,7 @@ const App: React.FC = () => {
         <Route path="/" element={<BlogForm onPublish={handlePublish} />} />
         <Route path="/blogs" element={<BlogList />} />
         <Route path="/blogs/:id" element={<BlogDetail />} />
+        <Route path="/edit-blog/:id" element={<EditBlog />} />
       </Routes>
     </Router>
   );

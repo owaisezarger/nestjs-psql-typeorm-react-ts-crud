@@ -1,7 +1,17 @@
 // src/blog/blog.controller.ts
-import { Controller, Get, Param, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  Delete,
+  Body,
+} from '@nestjs/common';
 import { BlogService } from './blog.service';
 import { Blog } from './blog.entity';
+import { CreateBlogDto } from './dto/create-blog.dto';
+import { UpdateBlogDto } from './dto/update-blog.dto';
 
 @Controller('blogs')
 export class BlogController {
@@ -18,7 +28,20 @@ export class BlogController {
   }
 
   @Post()
-  create(@Body() blog: Blog): Promise<Blog> {
-    return this.blogService.create(blog);
+  create(@Body() createBlogDto: CreateBlogDto): Promise<Blog> {
+    return this.blogService.create(createBlogDto);
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id') id: number,
+    @Body() updateBlogDto: UpdateBlogDto,
+  ): Promise<Blog> {
+    return this.blogService.update(id, updateBlogDto);
+  }
+
+  @Delete(':id')
+  async remove(@Param('id') id: number): Promise<void> {
+    return this.blogService.remove(id);
   }
 }
