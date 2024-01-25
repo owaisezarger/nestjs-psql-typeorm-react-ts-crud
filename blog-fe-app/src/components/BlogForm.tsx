@@ -1,21 +1,26 @@
 import React, { useState } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-interface BlogFormProps {
-  onPublish: (title: string, content: string) => void;
-}
-
-const BlogForm: React.FC<BlogFormProps> = ({ onPublish }) => {
+const BlogForm: React.FC = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
   const navigate = useNavigate();
 
-  const handlePublish = () => {
-    onPublish(title, content);
-    setTitle("");
-    setContent("");
+  const handlePublish = (title: string, content: string): void => {
+    try {
+      axios
+        .post("http://localhost:5000/blogs", { title, content })
+        .then((response) => {
+          console.log("Blog published:", response.data);
+          setTitle("");
+          setContent("");
+        });
+    } catch (error: any) {
+      console.log("Error:", error.message);
+    }
   };
 
   const handleRedirect = () => {
@@ -58,7 +63,11 @@ const BlogForm: React.FC<BlogFormProps> = ({ onPublish }) => {
           sx={{ mb: "1em" }}
         />
       </Box>
-      <Button variant="contained" color="primary" onClick={handlePublish}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => handlePublish(title, content)}
+      >
         Publish
       </Button>
     </Box>
